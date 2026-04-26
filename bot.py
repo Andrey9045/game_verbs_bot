@@ -10,9 +10,6 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s', level = log
 def start(update: Update, context = CallbackContext):
 	context.bot.send_message(chat_id=update.effective_chat.id, text ='Добрый день!')
 
-def echo(update: Update, context = CallbackContext):
-	context.bot.send_message(chat_id=update.effective_chat.id, text = update.message.text)
-
 def detect_intent_texts(update: Update, context=CallbackContext, project_id = 'exalted-ability-494118-b0'):
 
     from google.cloud import dialogflow
