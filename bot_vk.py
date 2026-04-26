@@ -3,12 +3,20 @@ import random
 import vk_api
 from vk_api.longpoll import VkLongPoll, VkEventType
 from dotenv import load_dotenv
+from google.cloud import dialogflow
 
 
-def echo(event, vk_api):
+def detect_intent_texts(project_id, event, vk_api):
+    session_client = dialogflow.SessionsClient()
+    session = session_client.session_path(project_id, event.user_id)
+    text_input = dialogflow.TextInput(text = event.text, language_code='ru')
+    query_input = dialogflow.QueryInput(text=text_input)
+    response = session_client.detect_intent(
+        request={"session": session, "query_input": query_input}
+    )
     vk_api.messages.send(
         user_id=event.user_id,
-        message=event.text,
+        message=response.query_result.fulfillment_text,
         random_id=random.randint(1, 1000)
         )
 
@@ -16,9 +24,10 @@ def echo(event, vk_api):
 if __name__ == '__main__' :
     load_dotenv()
     vk_token=os.getenv("VK_TOKEN")
+    project_id = 'exalted-ability-494118-b0'
     vk_session = vk_api.VkApi(token=vk_token)
     vk_api = vk_session.get_api() 
     longpoll = VkLongPoll(vk_session)
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-            echo(event, vk_api)
+            detect_intent_texts(project_id, event, vk_api)
