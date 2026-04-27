@@ -15,20 +15,24 @@ def start(update:Update, context=CallbackContext):
     )
 
 def detect_intent_texts(update:Update, context=CallbackContext, project_id='exalted-ability-494118-b0'):
-    session_client = dialogflow.SessionsClient()
-    session = session_client.session_path(project_id, update.effective_chat.id)
-    text_input = dialogflow.TextInput(
-        text=update.message.text,
-        language_code='ru'
-    )
-    query_input = dialogflow.QueryInput(text=text_input)
-    response = session_client.detect_intent(
-        request={"session": session, "query_input": query_input}
-    )
-    context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text=response.query_result.fulfillment_text
-    )
+    try:
+        session_client = dialogflow.SessionsClient()
+        session = session_client.session_path(project_id, update.effective_chat.id)
+        text_input = dialogflow.TextInput(
+            text=update.message.text,
+            language_code='ru'
+        )
+        query_input = dialogflow.QueryInput(text=text_input)
+        response = session_client.detect_intent(
+            request={"session": session, "query_input": query_input}
+        )
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=response.query_result.fulfillment_text
+        )
+    except Exception as e:
+        logging.error(f"Ошибка при отправке сообщения от {update.effective_chat.id}:{e}")
+        update.message.reply_text(f"Извините, произошла ошибка: {e}")
 
 
 if __name__ == '__main__':
