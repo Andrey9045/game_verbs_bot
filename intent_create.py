@@ -30,9 +30,9 @@ def create_intent(project_id, display_name, training_phrases_parts, message_text
     print("Intent created: {}".format(response))
 
 def main():
+    load_dotenv()
     with open('questions.json', 'r', encoding='utf-8') as f:
-        data = f.read()
-    questions = json.loads(data)
+        questions = json.load(f)
     for name, question_answer in questions.items():
         display_name = name
         training_phrases_parts = question_answer["questions"]
@@ -44,7 +44,5 @@ def main():
             message_texts
         )
 
-
 if __name__ == '__main__':
-    load_dotenv()
     main()
