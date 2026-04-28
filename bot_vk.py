@@ -33,4 +33,3 @@ if __name__ == '__main__':
     longpoll = VkLongPoll(vk_session)
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-            detect_intent_texts(project_id, event, vk_api)
