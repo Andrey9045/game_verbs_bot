@@ -25,7 +25,7 @@ def message_handler(update:Update, context=CallbackContext):
     user_id = update.effective_chat.id
     logger.debug(f"Сообщение пользователя {user_id}: {update.message.text}")
     try:
-        session_id = str(user_id)
+        session_id = f"tg-{user_id}"
         text = update.message.text
         answer, _ = get_dialogflow_response(PROJECT_ID, session_id, text)
         context.bot.send_message(

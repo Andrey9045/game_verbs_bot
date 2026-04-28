@@ -15,7 +15,7 @@ if not VK_TOKEN or not PROJECT_ID:
 
 
 def message_handler(event, vk_api):
-    session_id = event.user_id
+    session_id = f"vk-{event.user_id}"
     text = event.text
     answer, is_fallback = get_dialogflow_response(PROJECT_ID, session_id, text)
     if not is_fallback:
