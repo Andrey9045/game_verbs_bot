@@ -56,6 +56,7 @@ pip install -r requirements.txt
 ```
 TG_TOKEN=1234567890:AAElE... (токен Telegram бота)
 VK_TOKEN=vk1.a... (токен VK сообщества)
+ID_DF=exalted-ability...(ID dialogflow)
 GOOGLE_APPLICATION_CREDENTIALS=/opt/game_verbs_bot/credentials.json
 ```
 * `GOOGLE_APPLICATION_CREDENTIALS` - Сюда нужно положить абсолютный путь до credentials.json(Можно получить в Google Cloud Console)
