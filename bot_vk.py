@@ -29,10 +29,6 @@ if not VK_TOKEN or not PROJECT_ID:
 
 
 if __name__ == '__main__':
-    load_dotenv()
-    vk_token = os.getenv("VK_TOKEN")
-    project_id = 'exalted-ability-494118-b0'
-    vk_session = vk_api.VkApi(token=vk_token)
     vk_api = vk_session.get_api()
     longpoll = VkLongPoll(vk_session)
     for event in longpoll.listen():
