@@ -43,13 +43,9 @@ def detect_intent_texts(update:Update, context=CallbackContext, project_id='exal
 
 
 if __name__ == '__main__':
-    load_dotenv()
-    tg_token = os.getenv("TG_TOKEN")
-    updater = Updater(token=tg_token)
     updater = Updater(token=TG_TOKEN)
     dispatcher = updater.dispatcher
     start_handler = CommandHandler('start', start)
-    echo_handler = MessageHandler(Filters.text, detect_intent_texts)
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(echo_handler)
     updater.start_polling()
