@@ -4,6 +4,12 @@ from google.cloud import dialogflow
 from dotenv import load_dotenv
 
 
+load_dotenv()
+PROJECT_ID = os.environ["ID_DF"]
+if not PROJECT_ID:
+    raise ValueError("ID_DF не задан в .env")
+
+
 def create_intent(project_id, display_name, training_phrases_parts, message_texts):
     intents_client = dialogflow.IntentsClient()
 
@@ -30,7 +36,6 @@ def create_intent(project_id, display_name, training_phrases_parts, message_text
     print("Intent created: {}".format(response))
 
 def main():
-    load_dotenv()
     with open('questions.json', 'r', encoding='utf-8') as f:
         questions = json.load(f)
     for name, question_answer in questions.items():
@@ -38,7 +43,7 @@ def main():
         training_phrases_parts = question_answer["questions"]
         message_texts = [question_answer["answer"]]
         create_intent(
-            'exalted-ability-494118-b0',
+            PROJECT_ID,
             display_name,
             training_phrases_parts,
             message_texts

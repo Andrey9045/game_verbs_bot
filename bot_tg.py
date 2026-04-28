@@ -6,6 +6,13 @@ from google.cloud import dialogflow
 from dotenv import load_dotenv
 
 
+load_dotenv()
+TG_TOKEN = os.environ["TG_TOKEN"]
+PROJECT_ID = os.environ["ID_DF"]
+
+if not TG_TOKEN or not PROJECT_ID:
+    raise ValueError("Токен и ID не заданы в .env")
+
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s', level = logging.INFO)
 
 def start(update:Update, context=CallbackContext):
@@ -39,6 +46,7 @@ if __name__ == '__main__':
     load_dotenv()
     tg_token = os.getenv("TG_TOKEN")
     updater = Updater(token=tg_token)
+    updater = Updater(token=TG_TOKEN)
     dispatcher = updater.dispatcher
     start_handler = CommandHandler('start', start)
     echo_handler = MessageHandler(Filters.text, detect_intent_texts)
