@@ -15,6 +15,12 @@ def detect_intent_texts(project_id, event, vk_api):
         request={"session": session, "query_input": query_input}
     )
     if not response.query_result.intent.is_fallback:
+load_dotenv()
+VK_TOKEN = os.environ["VK_TOKEN"]
+PROJECT_ID = os.environ["ID_DF"]
+
+if not VK_TOKEN or not PROJECT_ID:
+    raise ValueError("Токен или ID не задан в .env")
         vk_api.messages.send(
             user_id=event.user_id,
             message=response.query_result.fulfillment_text,
