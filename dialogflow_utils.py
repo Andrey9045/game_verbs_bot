@@ -1,7 +1,11 @@
+import logging
 from google.cloud import dialogflow
 
 
+logger = logging.getLogger(__name__)
+
 def get_dialogflow_response(project_id:str, session_id:str, text:str, language_code:str='ru'):
+    logger.debug('Создана сессия Dialogflow')
     session_client = dialogflow.SessionsClient()
     session = session_client.session_path(project_id, session_id)
     text_input = dialogflow.TextInput(

@@ -13,7 +13,7 @@ PROJECT_ID = os.environ["ID_DF"]
 if not TG_TOKEN or not PROJECT_ID:
     raise ValueError("Токен и ID не заданы в .env")
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s', level = logging.INFO)
+logger = logging.getLogger(__name__)
 
 def start(update:Update, context=CallbackContext):
     context.bot.send_message(
@@ -22,16 +22,25 @@ def start(update:Update, context=CallbackContext):
     )
 
 def message_handler(update:Update, context=CallbackContext):
-    session_id = str(update.effective_chat.id)
-    text = update.message.text
-    answer, _ = get_dialogflow_response(PROJECT_ID, session_id, text)
-    context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text=answer
-    )
+    user_id = update.effective_chat.id
+    logger.debug(f"Сообщение пользователя {user_id}: {update.message.text}")
+    try:
+        session_id = str(user_id)
+        text = update.message.text
+        answer, _ = get_dialogflow_response(PROJECT_ID, session_id, text)
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=answer
+        )
+    except Exception as e:
+        logger.exception(f"Ошибка при обработке сообщения пользователя {user_id}:{ e}")
+        update.message.reply_text("Извините, произошла ошибка")
 
 
 if __name__ == '__main__':
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        level=logging.DEBUG)
     updater = Updater(token=TG_TOKEN)
     dispatcher = updater.dispatcher
     start_handler = CommandHandler('start', start)
