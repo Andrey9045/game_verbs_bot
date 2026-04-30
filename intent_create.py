@@ -1,13 +1,12 @@
 import os
+import logging
 import json
 from google.cloud import dialogflow
+from google.api_core.exceptions import AlreadyExists
 from dotenv import load_dotenv
 
 
-load_dotenv()
-PROJECT_ID = os.environ["ID_DF"]
-if not PROJECT_ID:
-    raise ValueError("ID_DF не задан в .env")
+logger = logging.getLogger(__name__)
 
 
 def create_intent(project_id, display_name, training_phrases_parts, message_texts):
@@ -28,12 +27,22 @@ def create_intent(project_id, display_name, training_phrases_parts, message_text
         training_phrases=training_phrases,
         messages=[message]
     )
+    try:
+        response = intents_client.create_intent(
+            request={"parent": parent, "intent": intent}
+        )
+    except AlreadyExists:
+        logger.info("Такие intents уже созданы, уже имеющиеся пропущены")
 
-    response = intents_client.create_intent(
-        request={"parent": parent, "intent": intent}
-    )
 
 def main():
+    load_dotenv()
+    PROJECT_ID = os.environ["ID_DF"]
+    if not PROJECT_ID:
+        raise ValueError("ID_DF не задан в .env")
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        level=logging.DEBUG)
     with open('questions.json', 'r', encoding='utf-8') as f:
         questions = json.load(f)
     for name, question_answer in questions.items():

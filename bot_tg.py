@@ -6,13 +6,6 @@ from dotenv import load_dotenv
 from dialogflow_utils import get_dialogflow_response
 
 
-load_dotenv()
-TG_TOKEN = os.environ["TG_TOKEN"]
-PROJECT_ID = os.environ["ID_DF"]
-
-if not TG_TOKEN or not PROJECT_ID:
-    raise ValueError("Токен и ID не заданы в .env")
-
 logger = logging.getLogger(__name__)
 
 def start(update:Update, context=CallbackContext):
@@ -27,7 +20,7 @@ def message_handler(update:Update, context=CallbackContext):
     try:
         session_id = f"tg-{user_id}"
         text = update.message.text
-        answer, _ = get_dialogflow_response(PROJECT_ID, session_id, text)
+        answer, _ = get_dialogflow_response(project_id, session_id, text)
         context.bot.send_message(
             chat_id=update.effective_chat.id,
             text=answer
@@ -38,10 +31,15 @@ def message_handler(update:Update, context=CallbackContext):
 
 
 if __name__ == '__main__':
+    load_dotenv()
+    tg_token = os.environ["TG_TOKEN"]
+    project_id = os.environ["ID_DF"]   
+    if not tg_token or not project_id:
+        raise ValueError("Токен и ID не заданы в .env")
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         level=logging.DEBUG)
-    updater = Updater(token=TG_TOKEN)
+    updater = Updater(token=tg_token)
     dispatcher = updater.dispatcher
     start_handler = CommandHandler('start', start)
     echo_handler = MessageHandler(Filters.text, message_handler)
