@@ -37,8 +37,8 @@ def create_intent(project_id, display_name, training_phrases_parts, message_text
 
 def main():
     load_dotenv()
-    PROJECT_ID = os.environ["ID_DF"]
-    if not PROJECT_ID:
+    project_id = os.environ["ID_DF"]
+    if not project_id:
         raise ValueError("ID_DF не задан в .env")
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -50,7 +50,7 @@ def main():
         training_phrases_parts = question_answer["questions"]
         message_texts = [question_answer["answer"]]
         create_intent(
-            PROJECT_ID,
+            project_id,
             display_name,
             training_phrases_parts,
             message_texts
